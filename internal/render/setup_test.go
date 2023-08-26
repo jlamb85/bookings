@@ -18,15 +18,13 @@ var testApp config.AppConfig
 
 func TestMain(m *testing.M) {
 
-	testApp.InProduction = false
+	gob.Register(models.Reservation{})
 
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	testApp.InfoLog = infoLog
 
 	errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 	testApp.ErrorLog = errorLog
-
-	gob.Register(models.Reservation{})
 
 	// change this to true when in production
 	testApp.InProduction = false

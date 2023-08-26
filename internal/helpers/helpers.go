@@ -2,9 +2,10 @@ package helpers
 
 import (
 	"fmt"
-	"gitlab.com/jlamb85/bookings/internal/config"
 	"net/http"
 	"runtime/debug"
+
+	"gitlab.com/jlamb85/bookings/internal/config"
 )
 
 var app *config.AppConfig

@@ -3,6 +3,13 @@ package handlers
 import (
 	"encoding/gob"
 	"fmt"
+	"html/template"
+	"log"
+	"net/http"
+	"os"
+	"path/filepath"
+	"time"
+
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -10,11 +17,6 @@ import (
 	"gitlab.com/jlamb85/bookings/internal/config"
 	"gitlab.com/jlamb85/bookings/internal/models"
 	"gitlab.com/jlamb85/bookings/internal/render"
-	"html/template"
-	"log"
-	"net/http"
-	"path/filepath"
-	"time"
 )
 
 var app config.AppConfig
@@ -29,11 +31,12 @@ func getRoutes() http.Handler {
 	// change this to true when in production
 	app.InProduction = false
 
-	infoLog = log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	app.InfoLog = infoLog
 
-	errorLog = log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 	app.ErrorLog = errorLog
+
 	// set up the session
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
@@ -54,12 +57,12 @@ func getRoutes() http.Handler {
 	repo := NewRepo(&app)
 	NewHandlers(repo)
 
-	render.NewTemplates(&app)
+	render.NewRenderer(&app)
 
 	mux := chi.NewRouter()
 
 	mux.Use(middleware.Recoverer)
-	// mux.Use(NoSurf)
+	//mux.Use(NoSurf)
 	mux.Use(SessionLoad)
 
 	mux.Get("/", Repo.Home)
